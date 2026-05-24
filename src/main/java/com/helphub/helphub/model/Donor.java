@@ -21,7 +21,7 @@ public class Donor {
     private String bloodGroup;
     private String phone;
     private String city;
-    private String location;
+    private String location; // This will store donation types as comma-separated values
     private String gender;
     private Integer age;
     private String disease;

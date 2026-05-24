@@ -18,6 +18,10 @@ public class EmergencyRequest {
 
     private String name;
 
+    private String email;
+
+    private String phone;
+
     private String requestType;
 
     private String description;
@@ -38,6 +42,22 @@ public class EmergencyRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getRequestType() {
@@ -66,6 +86,10 @@ public class EmergencyRequest {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {

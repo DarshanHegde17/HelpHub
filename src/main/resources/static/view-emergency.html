@@ -1,37 +1,489 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>View Emergency Requests</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Emergency Requests - HelpHub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, rgba(255, 51, 51, 0.22), transparent 35%), radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.18), transparent 35%), linear-gradient(135deg, #020617, #0f172a, #020617);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: -2;
+        }
+
+        .blur-circle {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(255, 51, 51, .15);
+            filter: blur(70px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .blur-circle.one {
+            top: 10%;
+            left: 5%;
+        }
+
+        .blur-circle.two {
+            bottom: 10%;
+            right: 5%;
+            background: rgba(56, 189, 248, .16);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        header {
+            width: 100%;
+            padding: 22px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background: rgba(2, 6, 23, .75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .logo {
+            font-size: 36px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btns a,
+        .nav-btns button {
+            text-decoration: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 35px;
+            font-weight: 600;
+            transition: .4s;
+            border: 1px solid rgba(255, 255, 255, .2);
+            background: rgba(255, 255, 255, .08);
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .nav-btns a:hover,
+        .nav-btns button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(255, 51, 51, .4);
+        }
+
+        .container {
+            padding: 120px 8% 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 58px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .page-header p {
+            color: #cbd5e1;
+            font-size: 18px;
+        }
+
+        .refresh-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #ff3333, #b80000);
+            color: white;
+            border: none;
+            border-radius: 35px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .4s;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(255, 51, 51, .4);
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .request-card {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 25px;
+            padding: 30px;
+            transition: .4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .request-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff3333, #ff8c00);
+        }
+
+        .request-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 35px rgba(255, 51, 51, .25);
+        }
+
+        .request-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .request-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff3333, #ff8c00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 8px 25px rgba(255, 51, 51, .3);
+        }
+
+        .request-info h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .request-type {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(255, 140, 0, .2);
+            border: 1px solid rgba(255, 140, 0, .4);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ff8c00;
+        }
+
+        .request-details {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+
+        .detail-row .icon {
+            color: #ff3333;
+            font-size: 18px;
+            min-width: 25px;
+            margin-top: 2px;
+        }
+
+        .detail-row strong {
+            color: #e2e8f0;
+            min-width: 90px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, .2);
+            border: 1px solid rgba(255, 193, 7, .4);
+            color: #ffc107;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, .2);
+            border: 1px solid rgba(34, 197, 94, .4);
+            color: #4ade80;
+        }
+
+        .status-resolved {
+            background: rgba(56, 189, 248, .2);
+            border: 1px solid rgba(56, 189, 248, .4);
+            color: #38bdf8;
+        }
+
+        .no-requests {
+            text-align: center;
+            padding: 80px 20px;
+            color: #94a3b8;
+        }
+
+        .no-requests .icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #cbd5e1;
+        }
+
+        .loading .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 51, 51, .2);
+            border-top-color: #ff3333;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media(max-width:950px) {
+            header {
+                padding: 20px 5%;
+            }
+
+            .container {
+                padding: 120px 5% 60px;
+            }
+
+            .page-header h1 {
+                font-size: 42px;
+            }
+
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <div class="grid-bg"></div>
+    <div class="blur-circle one"></div>
+    <div class="blur-circle two"></div>
 
-    <h1>All Emergency Requests</h1>
+    <header>
+        <div class="logo" onclick="window.location.href='index.html'">HelpHub</div>
+        <div class="nav-btns">
+            <a href="dashboard.html">Dashboard</a>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </header>
 
-    <button onclick="loadRequests()">Load Requests</button>
+    <div class="container">
+        <div class="page-header">
+            <h1>Emergency Requests</h1>
+            <p>View all active emergency requests and provide assistance</p>
+        </div>
 
-    <div id="requestList"></div>
+        <button class="refresh-btn" onclick="loadRequests()">🔄 Refresh Requests</button>
+
+        <div class="requests-grid" id="requestList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <h3>Loading emergency requests...</h3>
+            </div>
+        </div>
+    </div>
 
     <script>
+        function getEmergencyIcon(type) {
+            const icons = {
+                'Ambulance': '🚑',
+                'Blood': '🩸',
+                'Food': '🍱',
+                'Medical Support': '⚕️',
+                'Volunteer Support': '🤝'
+            };
+            return icons[type] || '🚨';
+        }
+
+        function getStatusClass(status) {
+            if (!status) return 'status-pending';
+            const statusLower = status.toLowerCase();
+            if (statusLower.includes('pending') || statusLower.includes('new')) return 'status-pending';
+            if (statusLower.includes('active') || statusLower.includes('progress')) return 'status-active';
+            if (statusLower.includes('resolved') || statusLower.includes('completed')) return 'status-resolved';
+            return 'status-pending';
+        }
+
         async function loadRequests() {
-            const response = await fetch("http://localhost:8080/api/emergency/all");
-            const requests = await response.json();
-
             const requestList = document.getElementById("requestList");
-            requestList.innerHTML = "";
+            requestList.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>Loading emergency requests...</h3>
+                </div>
+            `;
 
-            requests.forEach(req => {
-                requestList.innerHTML += `
-                    <div style="border:1px solid black; padding:15px; margin:15px;">
-                        <h3>${req.requestType}</h3>
-                        <p><b>Name:</b> ${req.name}</p>
-                        <p><b>Description:</b> ${req.description}</p>
-                        <p><b>Location:</b> ${req.location}</p>
-                        <p><b>Status:</b> ${req.status}</p>
+            try {
+                const response = await fetch("http://localhost:8080/api/emergency/all");
+                if (!response.ok) {
+                    throw new Error('Failed to load requests');
+                }
+
+                const requests = await response.json();
+
+                if (requests.length === 0) {
+                    requestList.innerHTML = `
+                        <div class="no-requests">
+                            <div class="icon">🚨</div>
+                            <h3>No Emergency Requests</h3>
+                            <p>There are currently no active emergency requests.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                requestList.innerHTML = requests.map(req => `
+                    <div class="request-card">
+                        <div class="request-header">
+                            <div class="request-icon">${getEmergencyIcon(req.requestType)}</div>
+                            <div class="request-info">
+                                <h3>${req.name || 'Anonymous'}</h3>
+                                <span class="request-type">${req.requestType || 'Emergency'}</span>
+                            </div>
+                        </div>
+                        <div class="request-details">
+                            <div class="detail-row">
+                                <span class="icon">📍</span>
+                                <div>
+                                    <strong>Location:</strong><br>
+                                    ${req.location || 'Not specified'}
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <span class="icon">📝</span>
+                                <div>
+                                    <strong>Description:</strong><br>
+                                    ${req.description || 'No description provided'}
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <span class="icon">📊</span>
+                                <div>
+                                    <strong>Status:</strong><br>
+                                    <span class="status-badge ${getStatusClass(req.status)}">
+                                        ${req.status || 'PENDING'}
+                                    </span>
+                                </div>
+                            </div>
+                            ${req.createdAt ? `
+                                <div class="detail-row">
+                                    <span class="icon">🕐</span>
+                                    <div>
+                                        <strong>Requested:</strong><br>
+                                        ${new Date(req.createdAt).toLocaleString()}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                requestList.innerHTML = `
+                    <div class="no-requests">
+                        <div class="icon">⚠️</div>
+                        <h3>Failed to Load Requests</h3>
+                        <p>Please check your connection and try again.</p>
                     </div>
                 `;
-            });
+                console.error('Error:', error);
+            }
         }
-    </script>
 
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load requests when page loads
+        loadRequests();
+    </script>
 </body>
+
 </html>

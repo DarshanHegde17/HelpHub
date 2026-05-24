@@ -588,7 +588,12 @@
                         return;
                     }
 
-                    donorsGrid.innerHTML = donors.map(donor => `
+                    donorsGrid.innerHTML = donors.map(donor => {
+                        // Check if user is authorized (you can modify this logic based on your auth system)
+                        const isAuthorized = localStorage.getItem('userRole') === 'admin' || 
+                                           localStorage.getItem('userEmail') === donor.email;
+                        
+                        return `
                         <div class="donor-card">
                             <div class="donor-header">
                                 <div class="donor-avatar">${donor.name ? donor.name.charAt(0).toUpperCase() : '?'}</div>
@@ -603,15 +608,18 @@
                                 <div class="detail-row"><span class="icon">🎂</span> ${donor.age ? donor.age + ' years old' : 'Age not provided'}</div>
                                 <div class="detail-row"><span class="icon">⚧</span> ${donor.gender || 'Not specified'}</div>
                                 <div class="detail-row"><span class="icon">📍</span> ${donor.city || 'Location not provided'}</div>
+                                <div class="detail-row"><span class="icon">🎁</span> <strong>Donating:</strong> ${donor.location || 'Not specified'}</div>
                                 <div class="detail-row"><span class="icon">💊</span> ${donor.disease || 'No medical conditions'}</div>
                                 <div class="detail-row"><span class="icon">✓</span> <span style="color:#4ade80">${donor.availability || 'AVAILABLE'}</span></div>
                             </div>
+                            ${isAuthorized ? `
                             <div class="card-actions">
                                 <button class="edit-btn" onclick='editDonor(${JSON.stringify(donor)})'>✏️ Edit</button>
                                 <button class="delete-btn" onclick="deleteDonor(${donor.id})">🗑️ Delete</button>
                             </div>
+                            ` : ''}
                         </div>
-                    `).join('');
+                    `}).join('');
                 } else {
                     throw new Error('Failed to load donors');
                 }
@@ -733,6 +741,8 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userRole');
                 window.location.href = 'index.html';
             }
         }

@@ -1,44 +1,382 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>HelpHub Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - HelpHub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, rgba(255, 51, 51, 0.22), transparent 35%), radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.18), transparent 35%), linear-gradient(135deg, #020617, #0f172a, #020617);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: -2;
+        }
+
+        .blur-circle {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(255, 51, 51, .15);
+            filter: blur(70px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .blur-circle.one {
+            top: 10%;
+            left: 5%;
+        }
+
+        .blur-circle.two {
+            bottom: 10%;
+            right: 5%;
+            background: rgba(56, 189, 248, .16);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 30px;
+            padding: 50px 40px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .logo-subtitle {
+            color: #cbd5e1;
+            font-size: 16px;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff3333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff3333;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff3333, #b80000);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(255, 51, 51, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background: rgba(255, 255, 255, .08);
+            padding: 0 15px;
+            position: relative;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+
+        .register-link a {
+            color: #ff3333;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .register-link a:hover {
+            color: #ff6b6b;
+            text-decoration: underline;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-home a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-home a:hover {
+            color: #7dd3fc;
+        }
+
+        @media(max-width:600px) {
+            .login-box {
+                padding: 40px 25px;
+            }
+
+            .logo {
+                font-size: 40px;
+            }
+
+            .form-title {
+                font-size: 28px;
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <div class="grid-bg"></div>
+    <div class="blur-circle one"></div>
+    <div class="blur-circle two"></div>
 
-    <h1>Login User</h1>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="logo-section">
+                <div class="logo">HelpHub</div>
+                <p class="logo-subtitle">Emergency Support Platform</p>
+            </div>
 
-    <input type="email" id="email" placeholder="Email"><br><br>
+            <h2 class="form-title">Login</h2>
 
-    <input type="password" id="password" placeholder="Password"><br><br>
+            <form id="loginForm" onsubmit="loginUser(event)">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
+                </div>
 
-    <button onclick="loginUser()">Login</button>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Login</button>
+                <div class="status-message" id="statusMessage"></div>
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <div class="register-link">
+                Don't have an account? <a href="register.html">Register here</a>
+            </div>
+
+            <div class="back-home">
+                <a href="index.html">← Back to Home</a>
+            </div>
+        </div>
+    </div>
 
     <script>
-        async function loginUser() {
+        async function loginUser(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const statusMsg = document.getElementById('statusMessage');
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+            statusMsg.style.display = 'none';
 
             const loginData = {
                 email: document.getElementById("email").value,
                 password: document.getElementById("password").value
             };
 
-            const response = await fetch("http://localhost:8080/api/users/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(loginData)
-            });
+            try {
+                const response = await fetch("http://localhost:8080/api/users/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(loginData)
+                });
 
-            const result = await response.text();
+                const result = await response.text();
 
-            if (result === "Login Successful") {
-                alert("Login Successful");
-                window.location.href = "dashboard.html";
-            } else {
-                alert(result);
+                if (result === "Login Successful") {
+                    // Store user info in localStorage
+                    localStorage.setItem('userEmail', loginData.email);
+                    // You can set role based on email or get it from backend
+                    // For now, setting admin for specific email
+                    if (loginData.email === 'admin@helphub.com') {
+                        localStorage.setItem('userRole', 'admin');
+                    } else {
+                        localStorage.setItem('userRole', 'user');
+                    }
+
+                    statusMsg.textContent = '✓ Login Successful! Redirecting...';
+                    statusMsg.className = 'status-message success';
+                    statusMsg.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 1500);
+                } else {
+                    statusMsg.textContent = '✗ ' + result;
+                    statusMsg.className = 'status-message error';
+                    statusMsg.style.display = 'block';
+                }
+            } catch (error) {
+                statusMsg.textContent = '✗ Login failed. Please try again.';
+                statusMsg.className = 'status-message error';
+                statusMsg.style.display = 'block';
+                console.error('Error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
             }
         }
     </script>
-
 </body>
+
 </html>

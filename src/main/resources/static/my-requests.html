@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpHub - My Requests</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            isolation: isolate;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.14), transparent 28%), linear-gradient(315deg, rgba(77, 166, 255, 0.13), transparent 30%), linear-gradient(135deg, #070b16 0%, #101827 46%, #07111f 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: #ff4d4d;
+            color: #ffffff;
+        }
+
+        #liquidWaveBg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.78;
+        }
+
+        .background-shade {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(7, 11, 22, 0.45), rgba(7, 11, 22, 0.76) 48%, rgba(7, 17, 31, 0.38));
+            background-size: 42px 42px, 42px 42px, 100% 100%;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.55) 62%, rgba(0, 0, 0, 0.9));
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            inset: 0;
+            background: repeating-linear-gradient(115deg, transparent 0 90px, rgba(255, 77, 77, 0.055) 90px 92px, transparent 92px 180px), repeating-linear-gradient(25deg, transparent 0 120px, rgba(77, 166, 255, 0.05) 120px 122px, transparent 122px 240px);
+            opacity: 0.62;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(7, 11, 22, 0.1) 0%, rgba(7, 11, 22, 0.58) 58%, rgba(7, 11, 22, 0.92) 100%), linear-gradient(90deg, rgba(255, 77, 77, 0.08), transparent 30%, transparent 70%, rgba(77, 166, 255, 0.08));
+            opacity: 0.95;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body>*:not(#liquidWaveBg):not(.background-shade):not(nav) {
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            width: 100%;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background: linear-gradient(90deg, rgba(10, 15, 28, 0.72), rgba(25, 18, 28, 0.66), rgba(9, 20, 34, 0.72));
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff4040, #ffffff 48%, #4da6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 18px rgba(255, 77, 77, 0.35));
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #ff4d4d, #4da6ff);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ff4d4d;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 40px;
+            background: linear-gradient(135deg, #ff4444, #e60000 58%, #ff8a8a);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.4s;
+            box-shadow: 0 12px 35px rgba(255, 38, 38, 0.28);
+        }
+
+        .container {
+            padding: 120px 8% 80px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: heroRise 0.9s ease both;
+        }
+
+        .page-header h1 {
+            font-size: 58px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #ffffff, #ff4d4d 48%, #4da6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 18px rgba(255, 77, 77, 0.35));
+        }
+
+        .page-header p {
+            color: #cbd5e1;
+            font-size: 18px;
+        }
+
+        @keyframes heroRise {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .request-card {
+            position: relative;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.035));
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 20px;
+            padding: 30px;
+            transition: 0.4s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+        }
+
+        .request-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 35px rgba(255, 77, 77, 0.3);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .blood-type {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff4d4d, #ff8a8a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.pending {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            color: #fbbf24;
+        }
+
+        .status-badge.fulfilled {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #4ade80;
+        }
+
+        .status-badge.cancelled {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #f87171;
+        }
+
+        .request-details {
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .detail-row .icon {
+            color: #ff4d4d;
+            font-size: 16px;
+            min-width: 20px;
+        }
+
+        .detail-row strong {
+            color: white;
+        }
+
+        .request-description {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .no-requests {
+            text-align: center;
+            padding: 80px 20px;
+            color: #94a3b8;
+        }
+
+        .no-requests .icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-requests h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+        }
+
+        .no-requests p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .create-request-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 40px;
+            background: linear-gradient(135deg, #ff4444, #e60000 58%, #ff8a8a);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.4s;
+            box-shadow: 0 12px 35px rgba(255, 38, 38, 0.28);
+        }
+
+        .create-request-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(255, 38, 38, 0.4);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #cbd5e1;
+        }
+
+        .loading .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 77, 77, 0.2);
+            border-top-color: #ff4d4d;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media(max-width:900px) {
+            nav ul {
+                display: none;
+            }
+
+            .page-header h1 {
+                font-size: 40px;
+            }
+
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="liquidWaveBg" aria-hidden="true"></canvas>
+    <div class="background-shade" aria-hidden="true"></div>
+    
+    <nav>
+        <div class="logo" onclick="window.location.href='index.html'">HelpHub</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="emergency.html">Emergency</a></li>
+            <li><a href="my-requests.html">My Requests</a></li>
+        </ul>
+        <button class="nav-btn" onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>My Emergency Requests</h1>
+            <p id="userEmailDisplay">View all your emergency requests</p>
+        </div>
+
+        <div id="requestsContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <h3>Loading your requests...</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const waveCanvas = document.getElementById('liquidWaveBg');
+        const waveCtx = waveCanvas.getContext('2d');
+        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const pointer = { x: 0, y: 0 };
+        let width = 0, height = 0, scrollPhase = 0, waveShift = 0, dots = [];
+
+        function resizeWaveCanvas() {
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+            width = window.innerWidth;
+            height = window.innerHeight;
+            waveCanvas.width = Math.floor(width * pixelRatio);
+            waveCanvas.height = Math.floor(height * pixelRatio);
+            waveCanvas.style.width = `${width}px`;
+            waveCanvas.style.height = `${height}px`;
+            waveCtx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+            const spacing = width < 760 ? 86 : 104;
+            dots = [];
+            for (let y = spacing * 0.55; y <= height + spacing; y += spacing) {
+                for (let x = spacing * 0.45; x <= width + spacing; x += spacing) {
+                    dots.push({ x: x + (Math.random() - 0.5) * spacing * 0.34, y: y + (Math.random() - 0.5) * spacing * 0.34, seed: Math.random() * Math.PI * 2 });
+                }
+            }
+        }
+
+        function drawLiquidWave() {
+            if (!motionQuery.matches) waveShift += 0.016;
+            scrollPhase += (window.scrollY - scrollPhase) * 0.08;
+            waveCtx.clearRect(0, 0, width, height);
+            waveCtx.fillStyle = '#07111f';
+            waveCtx.fillRect(0, 0, width, height);
+            waveCtx.lineWidth = 1;
+            for (let i = 0; i < dots.length; i++) {
+                const current = dots[i];
+                const cx = current.x + Math.sin(waveShift + current.seed) * 7 + (pointer.x - 0.5) * 10;
+                const cy = current.y + Math.cos(waveShift * 0.8 + current.seed) * 7 + (pointer.y - 0.5) * 8 - scrollPhase * 0.025;
+                for (let j = i + 1; j < dots.length; j++) {
+                    const next = dots[j];
+                    const nx = next.x + Math.sin(waveShift + next.seed) * 7 + (pointer.x - 0.5) * 10;
+                    const ny = next.y + Math.cos(waveShift * 0.8 + next.seed) * 7 + (pointer.y - 0.5) * 8 - scrollPhase * 0.025;
+                    const distance = Math.hypot(cx - nx, cy - ny);
+                    if (distance < 150) {
+                        const signal = Math.max(0, Math.sin(waveShift * 2.6 + current.seed + next.seed));
+                        const alpha = (1 - distance / 150) * (0.13 + signal * 0.12);
+                        waveCtx.strokeStyle = signal > 0.72 ? `rgba(255,77,77,${alpha})` : `rgba(77,166,255,${alpha})`;
+                        waveCtx.beginPath();
+                        waveCtx.moveTo(cx, cy);
+                        waveCtx.lineTo(nx, ny);
+                        waveCtx.stroke();
+                    }
+                }
+            }
+            for (const dot of dots) {
+                const px = dot.x + Math.sin(waveShift + dot.seed) * 7 + (pointer.x - 0.5) * 10;
+                const py = dot.y + Math.cos(waveShift * 0.8 + dot.seed) * 7 + (pointer.y - 0.5) * 8 - scrollPhase * 0.025;
+                if (px < -40 || px > width + 40 || py < -40 || py > height + 40) continue;
+                const beat = Math.max(0, Math.sin(waveShift * 2.4 + dot.seed));
+                const alpha = 0.28 + beat * 0.28;
+                const radius = 2 + beat * 1.6;
+                const isEmergencyNode = Math.sin(dot.seed) > 0.45;
+                waveCtx.shadowBlur = isEmergencyNode ? 14 : 10;
+                waveCtx.shadowColor = isEmergencyNode ? 'rgba(255,77,77,0.45)' : 'rgba(77,166,255,0.38)';
+                waveCtx.beginPath();
+                waveCtx.fillStyle = isEmergencyNode ? `rgba(255,77,77,${alpha})` : `rgba(77,166,255,${alpha})`;
+                waveCtx.arc(px, py, radius, 0, Math.PI * 2);
+                waveCtx.fill();
+            }
+            waveCtx.shadowBlur = 0;
+            requestAnimationFrame(drawLiquidWave);
+        }
+
+        window.addEventListener('resize', resizeWaveCanvas);
+        window.addEventListener('mousemove', (e) => {
+            pointer.x = e.clientX / Math.max(width, 1);
+            pointer.y = e.clientY / Math.max(height, 1);
+        });
+        resizeWaveCanvas();
+        drawLiquidWave();
+
+        // Load user's requests
+        async function loadMyRequests() {
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (!userEmail) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userEmailDisplay').textContent = `Requests for: ${userEmail}`;
+
+            const container = document.getElementById('requestsContainer');
+
+            try {
+                const response = await fetch('http://localhost:8080/api/emergency/all');
+                if (response.ok) {
+                    const allRequests = await response.json();
+                    
+                    // Filter requests by user email
+                    const myRequests = allRequests.filter(req => req.email === userEmail);
+
+                    if (myRequests.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-requests">
+                                <div class="icon">🩸</div>
+                                <h3>No Requests Yet</h3>
+                                <p>You haven't created any emergency requests yet.</p>
+                                <button class="create-request-btn" onclick="window.location.href='emergency.html'">
+                                    Create New Request
+                                </button>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    container.innerHTML = `
+                        <div class="requests-grid">
+                            ${myRequests.map(request => `
+                                <div class="request-card">
+                                    <div class="request-header">
+                                        <div class="blood-type">${request.requestType || 'N/A'}</div>
+                                        <span class="status-badge ${request.status ? request.status.toLowerCase() : 'pending'}">
+                                            ${request.status || 'PENDING'}
+                                        </span>
+                                    </div>
+                                    <div class="request-details">
+                                        <div class="detail-row">
+                                            <span class="icon">👤</span>
+                                            <span><strong>Name:</strong> ${request.name || 'Not provided'}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="icon">📧</span>
+                                            <span>${request.email || 'No email'}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="icon">📱</span>
+                                            <span>${request.phone || 'No phone'}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="icon">📍</span>
+                                            <span><strong>Location:</strong> ${request.location || 'Not provided'}</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="icon">🚨</span>
+                                            <span><strong>Type:</strong> ${request.requestType || 'Not specified'}</span>
+                                        </div>
+                                        ${request.createdAt ? `
+                                        <div class="detail-row">
+                                            <span class="icon">📅</span>
+                                            <span><strong>Created:</strong> ${new Date(request.createdAt).toLocaleString()}</span>
+                                        </div>
+                                        ` : ''}
+                                    </div>
+                                    ${request.description ? `
+                                    <div class="request-description">
+                                        <strong>Description:</strong><br>
+                                        ${request.description}
+                                    </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Failed to load requests');
+                }
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="no-requests">
+                        <div class="icon">⚠️</div>
+                        <h3>Failed to Load Requests</h3>
+                        <p>Please check your connection and try again.</p>
+                        <button class="create-request-btn" onclick="loadMyRequests()">
+                            Retry
+                        </button>
+                    </div>
+                `;
+                console.error('Error:', error);
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userRole');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load requests on page load
+        loadMyRequests();
+    </script>
+</body>
+
+</html>

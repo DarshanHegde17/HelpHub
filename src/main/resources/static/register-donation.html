@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Request - HelpHub</title>
+    <title>Register as Donor - HelpHub</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -146,7 +146,7 @@
             font-size: 18px;
         }
 
-        .emergency-form {
+        .donation-form {
             max-width: 900px;
             margin: 0 auto;
             background: rgba(255, 255, 255, .08);
@@ -217,29 +217,29 @@
 
         .form-group textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
         }
 
-        .emergency-types {
+        .donation-types {
             margin-bottom: 40px;
         }
 
-        .emergency-grid {
+        .donation-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
 
-        .emergency-option {
+        .donation-option {
             position: relative;
         }
 
-        .emergency-option input[type="radio"] {
+        .donation-option input[type="checkbox"] {
             display: none;
         }
 
-        .emergency-card {
+        .donation-card {
             padding: 25px;
             border: 2px solid rgba(255, 255, 255, .15);
             border-radius: 20px;
@@ -250,23 +250,23 @@
             position: relative;
         }
 
-        .emergency-option input[type="radio"]:checked+.emergency-card {
+        .donation-option input[type="checkbox"]:checked+.donation-card {
             border-color: #ff8c00;
             background: rgba(255, 140, 0, .2);
             box-shadow: 0 0 30px rgba(255, 140, 0, .4);
         }
 
-        .emergency-card:hover {
+        .donation-card:hover {
             transform: translateY(-5px);
             border-color: rgba(255, 140, 0, .6);
         }
 
-        .emergency-icon {
+        .donation-icon {
             font-size: 50px;
             margin-bottom: 15px;
         }
 
-        .emergency-name {
+        .donation-name {
             font-size: 18px;
             font-weight: 600;
             color: #e2e8f0;
@@ -287,7 +287,7 @@
             font-weight: bold;
         }
 
-        .emergency-option input[type="radio"]:checked+.emergency-card .checkmark {
+        .donation-option input[type="checkbox"]:checked+.donation-card .checkmark {
             display: flex;
         }
 
@@ -349,7 +349,7 @@
                 font-size: 42px;
             }
 
-            .emergency-form {
+            .donation-form {
                 padding: 30px 20px;
             }
 
@@ -357,7 +357,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .emergency-grid {
+            .donation-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -379,166 +379,205 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Emergency Request</h1>
-            <p>Submit your emergency request and get immediate assistance</p>
+            <h1>Register as Donor</h1>
+            <p>Fill in your details and select what you want to donate</p>
         </div>
 
-        <form class="emergency-form" id="emergencyForm" onsubmit="createEmergency(event)">
-            <h2 class="section-title">Emergency Details</h2>
-            
+        <form class="donation-form" id="donationForm" onsubmit="submitDonation(event)">
+            <h2 class="section-title">Personal Information</h2>
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="name">Your Name *</label>
+                    <label for="name">Full Name *</label>
                     <input type="text" id="name" required placeholder="Enter your full name">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" required placeholder="Enter your email" readonly>
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required placeholder="Enter your email">
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number *</label>
                     <input type="tel" id="phone" required placeholder="Enter your phone number">
                 </div>
                 <div class="form-group">
-                    <label for="location">Location *</label>
-                    <input type="text" id="location" required placeholder="Enter your current location">
+                    <label for="age">Age *</label>
+                    <input type="number" id="age" required min="18" max="65" placeholder="Enter your age">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender *</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bloodGroup">Blood Group *</label>
+                    <select id="bloodGroup" required>
+                        <option value="">Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
                 </div>
                 <div class="form-group full-width">
-                    <label for="description">Emergency Description *</label>
-                    <textarea id="description" required
-                        placeholder="Describe your emergency situation in detail..."></textarea>
+                    <label for="city">City *</label>
+                    <input type="text" id="city" required placeholder="Enter your city">
+                </div>
+                <div class="form-group full-width">
+                    <label for="disease">Medical Conditions (if any)</label>
+                    <textarea id="disease"
+                        placeholder="Enter any medical conditions, diseases, or health issues (optional)"></textarea>
                 </div>
             </div>
 
-            <div class="emergency-types">
-                <h2 class="section-title">Select Emergency Type *</h2>
-                <div class="emergency-grid">
-                    <div class="emergency-option">
-                        <input type="radio" id="ambulance" name="requestType" value="Ambulance" required>
-                        <label for="ambulance" class="emergency-card">
+            <div class="donation-types">
+                <h2 class="section-title">Select What You Want to Donate *</h2>
+                <div class="donation-grid">
+                    <div class="donation-option">
+                        <input type="checkbox" id="blood" name="donationType" value="Blood">
+                        <label for="blood" class="donation-card">
                             <span class="checkmark">✓</span>
-                            <div class="emergency-icon">🚑</div>
-                            <div class="emergency-name">Ambulance</div>
+                            <div class="donation-icon">🩸</div>
+                            <div class="donation-name">Blood</div>
                         </label>
                     </div>
-                    <div class="emergency-option">
-                        <input type="radio" id="blood" name="requestType" value="Blood">
-                        <label for="blood" class="emergency-card">
+                    <div class="donation-option">
+                        <input type="checkbox" id="eyes" name="donationType" value="Eyes">
+                        <label for="eyes" class="donation-card">
                             <span class="checkmark">✓</span>
-                            <div class="emergency-icon">🩸</div>
-                            <div class="emergency-name">Blood</div>
+                            <div class="donation-icon">👁️</div>
+                            <div class="donation-name">Eyes</div>
                         </label>
                     </div>
-                    <div class="emergency-option">
-                        <input type="radio" id="food" name="requestType" value="Food">
-                        <label for="food" class="emergency-card">
+                    <div class="donation-option">
+                        <input type="checkbox" id="kidney" name="donationType" value="Kidney">
+                        <label for="kidney" class="donation-card">
                             <span class="checkmark">✓</span>
-                            <div class="emergency-icon">🍱</div>
-                            <div class="emergency-name">Food</div>
+                            <div class="donation-icon">🫘</div>
+                            <div class="donation-name">Kidney</div>
                         </label>
                     </div>
-                    <div class="emergency-option">
-                        <input type="radio" id="medical" name="requestType" value="Medical Support">
-                        <label for="medical" class="emergency-card">
+                    <div class="donation-option">
+                        <input type="checkbox" id="liver" name="donationType" value="Liver">
+                        <label for="liver" class="donation-card">
                             <span class="checkmark">✓</span>
-                            <div class="emergency-icon">⚕️</div>
-                            <div class="emergency-name">Medical Support</div>
+                            <div class="donation-icon">🫀</div>
+                            <div class="donation-name">Liver</div>
                         </label>
                     </div>
-                    <div class="emergency-option">
-                        <input type="radio" id="volunteer" name="requestType" value="Volunteer Support">
-                        <label for="volunteer" class="emergency-card">
+                    <div class="donation-option">
+                        <input type="checkbox" id="heart" name="donationType" value="Heart">
+                        <label for="heart" class="donation-card">
                             <span class="checkmark">✓</span>
-                            <div class="emergency-icon">🤝</div>
-                            <div class="emergency-name">Volunteer Support</div>
+                            <div class="donation-icon">❤️</div>
+                            <div class="donation-name">Heart</div>
+                        </label>
+                    </div>
+                    <div class="donation-option">
+                        <input type="checkbox" id="lungs" name="donationType" value="Lungs">
+                        <label for="lungs" class="donation-card">
+                            <span class="checkmark">✓</span>
+                            <div class="donation-icon">🫁</div>
+                            <div class="donation-name">Lungs</div>
+                        </label>
+                    </div>
+                    <div class="donation-option">
+                        <input type="checkbox" id="pancreas" name="donationType" value="Pancreas">
+                        <label for="pancreas" class="donation-card">
+                            <span class="checkmark">✓</span>
+                            <div class="donation-icon">🩺</div>
+                            <div class="donation-name">Pancreas</div>
+                        </label>
+                    </div>
+                    <div class="donation-option">
+                        <input type="checkbox" id="skin" name="donationType" value="Skin">
+                        <label for="skin" class="donation-card">
+                            <span class="checkmark">✓</span>
+                            <div class="donation-icon">🤲</div>
+                            <div class="donation-name">Skin</div>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="submit-btn" id="submitBtn">Submit Emergency Request</button>
+            <button type="submit" class="submit-btn" id="submitBtn">Register as Donor</button>
             <div class="status-message" id="statusMessage"></div>
         </form>
     </div>
 
     <script>
-        // Auto-populate email from localStorage
-        window.addEventListener('DOMContentLoaded', () => {
-            const userEmail = localStorage.getItem('userEmail');
-            if (userEmail) {
-                document.getElementById('email').value = userEmail;
-            } else {
-                // Redirect to login if no email found
-                alert('Please login first');
-                window.location.href = 'login.html';
-            }
-        });
-
-        async function createEmergency(event) {
+        async function submitDonation(event) {
             event.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             const statusMsg = document.getElementById('statusMessage');
 
-            // Get selected emergency type
-            const selectedType = document.querySelector('input[name="requestType"]:checked');
-            if (!selectedType) {
-                statusMsg.textContent = '⚠️ Please select an emergency type';
+            // Get selected donation types
+            const checkboxes = document.querySelectorAll('input[name="donationType"]:checked');
+            if (checkboxes.length === 0) {
+                statusMsg.textContent = '⚠️ Please select at least one donation type';
                 statusMsg.className = 'status-message error';
                 statusMsg.style.display = 'block';
                 return;
             }
 
+            const donationTypes = Array.from(checkboxes).map(cb => cb.value).join(', ');
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting Request...';
+            submitBtn.textContent = 'Registering...';
             statusMsg.style.display = 'none';
 
-            const requestData = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                phone: document.getElementById("phone").value,
-                requestType: selectedType.value,
-                description: document.getElementById("description").value,
-                location: document.getElementById("location").value
+            const donorData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                gender: document.getElementById('gender').value,
+                age: parseInt(document.getElementById('age').value),
+                bloodGroup: document.getElementById('bloodGroup').value,
+                city: document.getElementById('city').value,
+                disease: document.getElementById('disease').value || 'None',
+                availability: 'AVAILABLE',
+                location: donationTypes // Store donation types in location field temporarily
             };
 
             try {
-                const response = await fetch("http://localhost:8080/api/emergency/create", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestData)
+                const response = await fetch('http://localhost:8080/api/donors/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(donorData)
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    statusMsg.textContent = '✓ Emergency Request Submitted Successfully! Help is on the way.';
+                    statusMsg.textContent = '✓ Registration Successful! Thank you for your noble decision.';
                     statusMsg.className = 'status-message success';
                     statusMsg.style.display = 'block';
-                    document.getElementById('emergencyForm').reset();
+                    document.getElementById('donationForm').reset();
 
                     setTimeout(() => {
-                        window.location.href = 'my-requests.html';
+                        window.location.href = 'dashboard.html';
                     }, 2500);
                 } else {
-                    throw new Error('Request failed');
+                    throw new Error('Registration failed');
                 }
             } catch (error) {
-                statusMsg.textContent = '✗ Failed to submit request. Please try again.';
+                statusMsg.textContent = '✗ Registration failed. Please try again.';
                 statusMsg.className = 'status-message error';
                 statusMsg.style.display = 'block';
                 console.error('Error:', error);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Emergency Request';
+                submitBtn.textContent = 'Register as Donor';
             }
         }
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('userRole');
                 window.location.href = 'index.html';
             }
         }
