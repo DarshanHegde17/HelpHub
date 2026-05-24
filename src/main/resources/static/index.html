@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpHub - Emergency Support Platform</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, rgba(255, 51, 51, 0.22), transparent 35%), radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.18), transparent 35%), linear-gradient(135deg, #020617, #0f172a, #020617);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ========================= */
+        /* PRELOADER ECG */
+        /* ========================= */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 99999;
+            animation: hideLoader 1s ease 3.2s forwards;
+        }
+
+        .ecg-box {
+            width: 550px;
+            max-width: 90%;
+        }
+
+        .ecg-box svg {
+            width: 100%;
+            height: 140px;
+        }
+
+        .ecg-path {
+            fill: none;
+            stroke: #ff3333;
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            animation: ecgMove 3s linear forwards;
+            filter: drop-shadow(0 0 15px #ff3333);
+        }
+
+        #preloader h1 {
+            margin-top: 25px;
+            font-size: 65px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #preloader p {
+            color: #cbd5e1;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        @keyframes ecgMove {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes hideLoader {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        /* ========================= */
+        /* BACKGROUND */
+        /* ========================= */
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image: linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+            background-size: 45px 45px;
+            z-index: -2;
+        }
+
+        .blur-circle {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: rgba(255, 51, 51, .15);
+            filter: blur(70px);
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .blur-circle.one {
+            top: 10%;
+            left: 5%;
+        }
+
+        .blur-circle.two {
+            bottom: 10%;
+            right: 5%;
+            background: rgba(56, 189, 248, .16);
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-35px);
+            }
+        }
+
+        /* ========================= */
+        /* HEADER */
+        /* ========================= */
+        header {
+            width: 100%;
+            padding: 22px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            background: rgba(2, 6, 23, .75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .logo {
+            font-size: 36px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btns a {
+            text-decoration: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 35px;
+            font-weight: 600;
+            transition: .4s;
+        }
+
+        .login-btn {
+            border: 1px solid rgba(255, 255, 255, .2);
+            background: rgba(255, 255, 255, .08);
+        }
+
+        .signup-btn {
+            background: linear-gradient(135deg, #ff3333, #b80000);
+            box-shadow: 0 0 25px rgba(255, 51, 51, .35);
+        }
+
+        .nav-btns a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(255, 51, 51, .4);
+        }
+
+        /* ========================= */
+        /* HERO SECTION */
+        /* ========================= */
+        .hero {
+            min-height: 100vh;
+            padding: 160px 8% 80px;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-text h1 {
+            font-size: 72px;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        .hero-text h1 span {
+            color: #ff3333;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            line-height: 1.9;
+            color: #cbd5e1;
+            margin-bottom: 35px;
+            max-width: 650px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: .4s;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #ff3333, #b80000);
+        }
+
+        .secondary-btn {
+            border: 1px solid rgba(255, 255, 255, .18);
+            background: rgba(255, 255, 255, .07);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+        }
+
+        /* ========================= */
+        /* STATS */
+        /* ========================= */
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            min-width: 180px;
+            padding: 25px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            backdrop-filter: blur(15px);
+            transition: .4s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(255, 51, 51, .25);
+        }
+
+        .stat-card h2 {
+            font-size: 40px;
+            color: #ff3333;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #cbd5e1;
+        }
+
+        /* ========================= */
+        /* HERO CARDS */
+        /* ========================= */
+        .hero-cards {
+            display: grid;
+            gap: 25px;
+        }
+
+        .info-card {
+            padding: 30px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            backdrop-filter: blur(16px);
+            transition: .4s;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 35px rgba(255, 51, 51, .25);
+        }
+
+        .info-card h2 {
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .info-card p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        /* ========================= */
+        /* FEATURES */
+        /* ========================= */
+        .services {
+            padding: 100px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 58px;
+            margin-bottom: 60px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, #ff3333, white, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .service-box {
+            padding: 40px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            text-align: center;
+            transition: .4s;
+        }
+
+        .service-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(255, 51, 51, .25);
+        }
+
+        .service-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .service-box h2 {
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+
+        .service-box p {
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        /* ========================= */
+        /* QUOTES */
+        /* ========================= */
+        .quotes {
+            padding: 100px 8%;
+        }
+
+        .quote-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .quote-card {
+            padding: 35px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            transition: .4s;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .quote-card p {
+            font-size: 20px;
+            color: #ffb3b3;
+            line-height: 1.9;
+        }
+
+        /* ========================= */
+        /* CONTACT */
+        /* ========================= */
+        .contact {
+            padding: 100px 8%;
+        }
+
+        .contact-box {
+            max-width: 700px;
+            margin: auto;
+            padding: 50px;
+            border-radius: 35px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+        }
+
+        .contact-box input,
+        .contact-box textarea {
+            width: 100%;
+            padding: 18px;
+            margin-top: 20px;
+            border: none;
+            outline: none;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .08);
+            color: white;
+            font-size: 16px;
+        }
+
+        .contact-box textarea {
+            height: 150px;
+            resize: none;
+        }
+
+        .contact-btn {
+            margin-top: 25px;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 35px;
+            background: linear-gradient(135deg, #ff3333, #b80000);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .4s;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-5px);
+        }
+
+        /* ========================= */
+        /* FOOTER */
+        /* ========================= */
+        footer {
+            padding: 35px;
+            text-align: center;
+            background: #020617;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        /* ========================= */
+        /* RESPONSIVE */
+        /* ========================= */
+        @media(max-width:950px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 48px;
+            }
+
+            .section-title {
+                font-size: 42px;
+            }
+
+            header {
+                padding: 20px 5%;
+            }
+
+            .hero {
+                padding: 150px 5% 70px;
+            }
+
+            .services,
+            .quotes,
+            .contact {
+                padding: 80px 5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="ecg-box">
+            <svg viewBox="0 0 500 120">
+                <path class="ecg-path"
+                    d="M0 60 L60 60 L90 60 L110 20 L140 100 L170 40 L200 60 L260 60 L290 60 L310 20 L340 100 L370 40 L400 60 L500 60">
+                </path>
+            </svg>
+        </div>
+        <h1>HelpHub</h1>
+        <p>Emergency Support Platform</p>
+    </div>
+
+    <!-- BACKGROUND -->
+    <div class="grid-bg"></div>
+    <div class="blur-circle one"></div>
+    <div class="blur-circle two"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">HelpHub</div>
+        <div class="nav-btns">
+            <a href="login.html" class="login-btn">Login</a>
+            <a href="register.html" class="signup-btn">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Helping Lives With <span>Technology</span></h1>
+            <p>HelpHub is an advanced emergency support platform connecting hospitals, blood donors, volunteers and
+                emergency services during critical situations. Fast response can save lives.</p>
+            <div class="hero-buttons">
+                <a href="login.html" class="btn primary-btn">Get Started</a>
+                <a href="register.html" class="btn secondary-btn">Learn More</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <h2>24/7</h2>
+                    <p>Emergency Support</p>
+                </div>
+                <div class="stat-card">
+                    <h2>1000+</h2>
+                    <p>Blood Donors</p>
+                </div>
+                <div class="stat-card">
+                    <h2>75+</h2>
+                    <p>Partner Hospitals</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-cards">
+            <div class="info-card">
+                <h2>🩸 Blood Donation</h2>
+                <p>Connect instantly with nearby blood donors during emergency situations and save valuable time.</p>
+            </div>
+            <div class="info-card">
+                <h2>🚑 Emergency Help</h2>
+                <p>Get ambulance support and hospital emergency response in real time using smart technology.</p>
+            </div>
+            <div class="info-card">
+                <h2>🤝 Volunteer Support</h2>
+                <p>Community volunteers can support with food, rescue, medicines and emergency assistance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="services">
+        <h1 class="section-title">Why Choose HelpHub?</h1>
+        <div class="service-grid">
+            <div class="service-box">
+                <div class="service-icon">⚡</div>
+                <h2>Fast Response</h2>
+                <p>Emergency alerts are delivered instantly to nearby support teams and volunteers.</p>
+            </div>
+            <div class="service-box">
+                <div class="service-icon">📍</div>
+                <h2>Live Location</h2>
+                <p>Detect nearby hospitals, blood donors and ambulances using smart location tracking.</p>
+            </div>
+            <div class="service-box">
+                <div class="service-icon">🛡</div>
+                <h2>Secure Platform</h2>
+                <p>User data and emergency information are protected with secure authentication systems.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUOTES -->
+    <section class="quotes">
+        <h1 class="section-title">Inspirational Quotes</h1>
+        <div class="quote-grid">
+            <div class="quote-card">
+                <p>"Saving one life is like saving all humanity."</p>
+            </div>
+            <div class="quote-card">
+                <p>"Helping people during emergencies creates a stronger community."</p>
+            </div>
+            <div class="quote-card">
+                <p>"Donate blood today and become someone's hero tomorrow."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact">
+        <h1 class="section-title">Contact Us</h1>
+        <div class="contact-box">
+            <input type="text" placeholder="Enter your name">
+            <input type="email" placeholder="Enter your email">
+            <textarea placeholder="Write your message"></textarea>
+            <button class="contact-btn">Send Message</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 HelpHub | MCA Final Year Project
+    </footer>
+</body>
+
+</html>

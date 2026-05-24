@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Emergency Requests</title>
+</head>
+<body>
+
+    <h1>All Emergency Requests</h1>
+
+    <button onclick="loadRequests()">Load Requests</button>
+
+    <div id="requestList"></div>
+
+    <script>
+        async function loadRequests() {
+            const response = await fetch("http://localhost:8080/api/emergency/all");
+            const requests = await response.json();
+
+            const requestList = document.getElementById("requestList");
+            requestList.innerHTML = "";
+
+            requests.forEach(req => {
+                requestList.innerHTML += `
+                    <div style="border:1px solid black; padding:15px; margin:15px;">
+                        <h3>${req.requestType}</h3>
+                        <p><b>Name:</b> ${req.name}</p>
+                        <p><b>Description:</b> ${req.description}</p>
+                        <p><b>Location:</b> ${req.location}</p>
+                        <p><b>Status:</b> ${req.status}</p>
+                    </div>
+                `;
+            });
+        }
+    </script>
+
+</body>
+</html>

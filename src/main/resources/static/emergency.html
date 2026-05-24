@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Request</title>
+</head>
+<body>
+
+    <h1>Create Emergency Request</h1>
+
+    <input type="text" id="name" placeholder="Your Name"><br><br>
+
+    <select id="requestType">
+        <option value="Ambulance">Ambulance</option>
+        <option value="Blood">Blood</option>
+        <option value="Food">Food</option>
+        <option value="Medical Support">Medical Support</option>
+        <option value="Volunteer Support">Volunteer Support</option>
+    </select><br><br>
+
+    <textarea id="description" placeholder="Describe your emergency"></textarea><br><br>
+
+    <input type="text" id="location" placeholder="Location"><br><br>
+
+    <button onclick="createEmergency()">Submit Request</button>
+
+    <script>
+        async function createEmergency() {
+            const requestData = {
+                name: document.getElementById("name").value,
+                requestType: document.getElementById("requestType").value,
+                description: document.getElementById("description").value,
+                location: document.getElementById("location").value
+            };
+
+            const response = await fetch("http://localhost:8080/api/emergency/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            const data = await response.json();
+
+            alert("Emergency Request Submitted Successfully");
+            console.log(data);
+        }
+    </script>
+
+</body>
+</html>
