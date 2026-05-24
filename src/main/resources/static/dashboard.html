@@ -629,11 +629,11 @@
                 </div>
             </div>
 
-            <div class="dashboard-card" onclick="window.location.href='register-donation.html'">
+            <div class="dashboard-card" onclick="window.location.href='my-requests.html'">
                 <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1200&auto=format&fit=crop" alt="Blood alerts and donors">
                 <div class="card-content">
-                    <h2>📋 Register as Donor</h2>
-                    <p>Register yourself as a donor and select what you want to donate (Blood, Eyes, Organs, etc.).</p>
+                    <h2>📋 My Donations</h2>
+                    <p>Register yourself as a donor and manage your donations (Blood, Eyes, Organs, etc.).</p>
                 </div>
             </div>
 
@@ -738,6 +738,25 @@
         const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
         const pointer = { x: 0, y: 0 };
         let width = 0, height = 0, scrollPhase = 0, waveShift = 0, dots = [];
+
+        // Format donation types with icons
+        function formatDonationTypes(donationString) {
+            if (!donationString) return 'Blood';
+            
+            const iconMap = {
+                'Blood': '🩸',
+                'Eyes': '👁️',
+                'Kidney': '🫘',
+                'Liver': '🫀',
+                'Heart': '❤️',
+                'Lungs': '🫁',
+                'Pancreas': '🩺',
+                'Skin': '🤲'
+            };
+            
+            const types = donationString.split(',').map(t => t.trim());
+            return types.map(type => `${iconMap[type] || '🎁'} ${type}`).join(', ');
+        }
 
         function resizeWaveCanvas() {
             const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
@@ -907,6 +926,7 @@
 <div class="detail-row"><span class="icon">🎂</span> ${donor.age ? donor.age + ' years old' : 'Age not provided'}</div>
 <div class="detail-row"><span class="icon">⚧</span> ${donor.gender || 'Not specified'}</div>
 <div class="detail-row"><span class="icon">📍</span> ${donor.city || 'Location not provided'}</div>
+<div class="detail-row"><span class="icon">🎁</span> <strong>Donating:</strong> <span style="color:#4ade80">${donor.location ? formatDonationTypes(donor.location) : '🩸 Blood'}</span></div>
 <div class="detail-row"><span class="icon">💊</span> ${donor.disease || 'No medical conditions'}</div>
 <div class="detail-row"><span class="icon">✓</span> <span style="color:#4ade80">${donor.availability || 'AVAILABLE'}</span></div>
 </div>

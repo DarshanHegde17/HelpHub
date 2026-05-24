@@ -512,6 +512,18 @@
     </div>
 
     <script>
+        // Auto-populate email from localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.getElementById('email').value = userEmail;
+                document.getElementById('email').readOnly = true;
+            } else {
+                alert('Please login first');
+                window.location.href = 'login.html';
+            }
+        });
+
         async function submitDonation(event) {
             event.preventDefault();
 
@@ -560,7 +572,7 @@
                     document.getElementById('donationForm').reset();
 
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'manage-donors.html';
                     }, 2500);
                 } else {
                     throw new Error('Registration failed');

@@ -497,11 +497,11 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>Manage Blood Donors</h1>
-            <p>View, edit, and manage all registered blood donors</p>
+            <h1>Manage My Donations</h1>
+            <p id="userEmailDisplay">Manage your blood donation registrations</p>
         </div>
 
-        <button class="add-donor-btn" onclick="openAddModal()">+ Add New Donor</button>
+        <button class="add-donor-btn" onclick="openAddModal()">+ Add New Donation</button>
 
         <div class="donors-grid" id="donorsGrid">
             <div class="no-donors">
@@ -559,11 +559,48 @@
                         <option value="O-">O-</option>
                     </select>
                 </div>
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label for="donorCity">City *</label>
                     <input type="text" id="donorCity" required placeholder="Enter city">
                 </div>
-                <div class="form-group">
+                <div class="form-group full-width">
+                    <label>What to Donate *</label>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Blood" style="width:auto;">
+                            <span>🩸 Blood</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Eyes" style="width:auto;">
+                            <span>👁️ Eyes</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Kidney" style="width:auto;">
+                            <span>🫘 Kidney</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Liver" style="width:auto;">
+                            <span>🫀 Liver</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Heart" style="width:auto;">
+                            <span>❤️ Heart</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Lungs" style="width:auto;">
+                            <span>🫁 Lungs</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Pancreas" style="width:auto;">
+                            <span>🩺 Pancreas</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <input type="checkbox" name="donationType" value="Skin" style="width:auto;">
+                            <span>🤲 Skin</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group full-width">
                     <label for="donorDisease">Medical Conditions (if any)</label>
                     <textarea id="donorDisease"
                         placeholder="Enter any medical conditions or diseases (optional)"></textarea>
@@ -575,25 +612,59 @@
     </div>
 
     <script>
+        let userEmail = '';
+
+        // Format donation types with icons
+        function formatDonationTypes(donationString) {
+            if (!donationString) return 'Not specified';
+            
+            const iconMap = {
+                'Blood': '🩸',
+                'Eyes': '👁️',
+                'Kidney': '🫘',
+                'Liver': '🫀',
+                'Heart': '❤️',
+                'Lungs': '🫁',
+                'Pancreas': '🩺',
+                'Skin': '🤲'
+            };
+            
+            const types = donationString.split(',').map(t => t.trim());
+            return types.map(type => `${iconMap[type] || '🎁'} ${type}`).join(', ');
+        }
+
+        // Initialize page
+        function initializePage() {
+            userEmail = localStorage.getItem('userEmail');
+            
+            if (!userEmail) {
+                alert('Please login first');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userEmailDisplay').textContent = `Manage donations for: ${userEmail}`;
+            loadDonors();
+        }
+
         async function loadDonors() {
             const donorsGrid = document.getElementById('donorsGrid');
-            donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">🩸</div><h3>Loading donors...</h3></div>';
+            donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">🩸</div><h3>Loading your donations...</h3></div>';
 
             try {
                 const response = await fetch('http://localhost:8080/api/donors/all');
                 if (response.ok) {
-                    const donors = await response.json();
-                    if (donors.length === 0) {
-                        donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">🩸</div><h3>No donors registered yet</h3><p>Click "Add New Donor" to register the first donor!</p></div>';
+                    const allDonors = await response.json();
+                    
+                    // Filter to show only logged-in user's donations
+                    const myDonations = allDonors.filter(donor => donor.email === userEmail);
+                    
+                    if (myDonations.length === 0) {
+                        donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">🩸</div><h3>No donations registered yet</h3><p>Click "Add New Donor" to register your first donation!</p></div>';
                         return;
                     }
 
-                    donorsGrid.innerHTML = donors.map(donor => {
-                        // Check if user is authorized (you can modify this logic based on your auth system)
-                        const isAuthorized = localStorage.getItem('userRole') === 'admin' || 
-                                           localStorage.getItem('userEmail') === donor.email;
-                        
-                        return `
+                    donorsGrid.innerHTML = myDonations.map(donor => `
                         <div class="donor-card">
                             <div class="donor-header">
                                 <div class="donor-avatar">${donor.name ? donor.name.charAt(0).toUpperCase() : '?'}</div>
@@ -608,48 +679,68 @@
                                 <div class="detail-row"><span class="icon">🎂</span> ${donor.age ? donor.age + ' years old' : 'Age not provided'}</div>
                                 <div class="detail-row"><span class="icon">⚧</span> ${donor.gender || 'Not specified'}</div>
                                 <div class="detail-row"><span class="icon">📍</span> ${donor.city || 'Location not provided'}</div>
-                                <div class="detail-row"><span class="icon">🎁</span> <strong>Donating:</strong> ${donor.location || 'Not specified'}</div>
+                                <div class="detail-row">
+                                    <span class="icon">🎁</span> 
+                                    <strong>Donating:</strong> 
+                                    <span style="color:#4ade80">${formatDonationTypes(donor.location) || 'Not specified'}</span>
+                                </div>
                                 <div class="detail-row"><span class="icon">💊</span> ${donor.disease || 'No medical conditions'}</div>
                                 <div class="detail-row"><span class="icon">✓</span> <span style="color:#4ade80">${donor.availability || 'AVAILABLE'}</span></div>
                             </div>
-                            ${isAuthorized ? `
                             <div class="card-actions">
                                 <button class="edit-btn" onclick='editDonor(${JSON.stringify(donor)})'>✏️ Edit</button>
                                 <button class="delete-btn" onclick="deleteDonor(${donor.id})">🗑️ Delete</button>
                             </div>
-                            ` : ''}
                         </div>
-                    `}).join('');
+                    `).join('');
                 } else {
                     throw new Error('Failed to load donors');
                 }
             } catch (error) {
-                donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">⚠️</div><h3>Failed to load donors</h3><p>Please check your connection and try again.</p></div>';
+                donorsGrid.innerHTML = '<div class="no-donors"><div class="icon">⚠️</div><h3>Failed to load donations</h3><p>Please check your connection and try again.</p></div>';
                 console.error('Error:', error);
             }
         }
 
         function openAddModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Donor';
+            document.getElementById('modalTitle').textContent = 'Add New Donation';
             document.getElementById('donorForm').reset();
             document.getElementById('donorId').value = '';
-            document.getElementById('submitBtn').textContent = 'Save Donor';
+            // Pre-fill email with logged-in user's email
+            document.getElementById('donorEmail').value = userEmail;
+            document.getElementById('donorEmail').readOnly = true;
+            // Uncheck all donation types
+            document.querySelectorAll('input[name="donationType"]').forEach(cb => cb.checked = false);
+            document.getElementById('submitBtn').textContent = 'Save Donation';
             document.getElementById('statusMessage').style.display = 'none';
             document.getElementById('donorModal').classList.add('active');
         }
 
         function editDonor(donor) {
-            document.getElementById('modalTitle').textContent = 'Edit Donor';
+            document.getElementById('modalTitle').textContent = 'Edit Donation';
             document.getElementById('donorId').value = donor.id;
             document.getElementById('donorName').value = donor.name || '';
             document.getElementById('donorEmail').value = donor.email || '';
+            document.getElementById('donorEmail').readOnly = true;
             document.getElementById('donorPhone').value = donor.phone || '';
             document.getElementById('donorGender').value = donor.gender || '';
             document.getElementById('donorAge').value = donor.age || '';
             document.getElementById('donorBloodGroup').value = donor.bloodGroup || '';
             document.getElementById('donorCity').value = donor.city || '';
             document.getElementById('donorDisease').value = donor.disease || '';
-            document.getElementById('submitBtn').textContent = 'Update Donor';
+            
+            // Set donation type checkboxes
+            document.querySelectorAll('input[name="donationType"]').forEach(cb => cb.checked = false);
+            if (donor.location) {
+                const selectedTypes = donor.location.split(',').map(t => t.trim());
+                document.querySelectorAll('input[name="donationType"]').forEach(cb => {
+                    if (selectedTypes.includes(cb.value)) {
+                        cb.checked = true;
+                    }
+                });
+            }
+            
+            document.getElementById('submitBtn').textContent = 'Update Donation';
             document.getElementById('statusMessage').style.display = 'none';
             document.getElementById('donorModal').classList.add('active');
         }
@@ -657,6 +748,7 @@
         function closeModal() {
             document.getElementById('donorModal').classList.remove('active');
             document.getElementById('donorForm').reset();
+            document.getElementById('donorEmail').readOnly = false;
             document.getElementById('statusMessage').style.display = 'none';
         }
 
@@ -665,6 +757,17 @@
             const submitBtn = document.getElementById('submitBtn');
             const statusMsg = document.getElementById('statusMessage');
             const donorId = document.getElementById('donorId').value;
+
+            // Get selected donation types
+            const checkboxes = document.querySelectorAll('input[name="donationType"]:checked');
+            if (checkboxes.length === 0) {
+                statusMsg.textContent = '⚠️ Please select at least one donation type';
+                statusMsg.className = 'status-message error';
+                statusMsg.style.display = 'block';
+                return;
+            }
+
+            const donationTypes = Array.from(checkboxes).map(cb => cb.value).join(', ');
 
             submitBtn.disabled = true;
             submitBtn.textContent = donorId ? 'Updating...' : 'Saving...';
@@ -679,7 +782,8 @@
                 bloodGroup: document.getElementById('donorBloodGroup').value,
                 city: document.getElementById('donorCity').value,
                 disease: document.getElementById('donorDisease').value || 'None',
-                availability: 'AVAILABLE'
+                availability: 'AVAILABLE',
+                location: donationTypes
             };
 
             try {
@@ -695,7 +799,7 @@
                 });
 
                 if (response.ok) {
-                    statusMsg.textContent = donorId ? '✓ Donor updated successfully!' : '✓ Donor added successfully!';
+                    statusMsg.textContent = donorId ? '✓ Donation updated successfully!' : '✓ Donation added successfully!';
                     statusMsg.className = 'status-message success';
                     statusMsg.style.display = 'block';
                     document.getElementById('donorForm').reset();
@@ -713,12 +817,12 @@
                 console.error('Error:', error);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = donorId ? 'Update Donor' : 'Save Donor';
+                submitBtn.textContent = donorId ? 'Update Donation' : 'Save Donation';
             }
         }
 
         async function deleteDonor(id) {
-            if (!confirm('Are you sure you want to delete this donor? This action cannot be undone.')) {
+            if (!confirm('Are you sure you want to delete this donation? This action cannot be undone.')) {
                 return;
             }
 
@@ -728,13 +832,13 @@
                 });
 
                 if (response.ok) {
-                    alert('✓ Donor deleted successfully!');
+                    alert('✓ Donation deleted successfully!');
                     loadDonors();
                 } else {
                     throw new Error('Delete failed');
                 }
             } catch (error) {
-                alert('✗ Failed to delete donor. Please try again.');
+                alert('✗ Failed to delete donation. Please try again.');
                 console.error('Error:', error);
             }
         }
@@ -754,7 +858,8 @@
             }
         }
 
-        loadDonors();
+        // Initialize on page load
+        initializePage();
     </script>
 </body>
 

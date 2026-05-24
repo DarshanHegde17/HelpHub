@@ -31,6 +31,8 @@ public class EmergencyRequest {
     private String status = "PENDING";
 
     private LocalDateTime createdAt = LocalDateTime.now();
+    
+    private LocalDateTime expiresAt; // Auto-delete after this date
 
     public Long getId() {
         return id;
@@ -94,5 +96,13 @@ public class EmergencyRequest {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 }
