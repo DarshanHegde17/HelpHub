@@ -1,14 +1,4 @@
 # HelpHub - Emergency Support Platform
-
-
-
-
-
-
-
-
-
-
 ## 🚀 Project Overview
 HelpHub is a smart emergency support platform connecting blood donors, volunteers, hospitals, and emergency responders instantly during critical situations.
 
