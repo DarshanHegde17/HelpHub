@@ -116,6 +116,9 @@ mvnw clean install
 mvnw spring-boot:run
 ```
 
+
+
+
 6. **Access the Application**
 - Landing Page: http://localhost:8080/index.html
 - Login: http://localhost:8080/login.html
