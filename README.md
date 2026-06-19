@@ -8,9 +8,6 @@ HelpHub is a smart emergency support platform connecting blood donors, volunteer
 - **Volunteer Network**: Community volunteers ready to help
 - **Live Location Tracking**: Detect nearby hospitals and donors
 - **User Authentication**: Secure login and registration system
-
-- 
-
 ## 🛠️ Technology Stack
 
 ### Backend
