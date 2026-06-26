@@ -17,6 +17,7 @@ HelpHub is a smart emergency support platform connecting blood donors, volunteer
 - **ORM**: Spring Data JPA
 - **Build Tool**: Maven
 
+
 ### Frontend
 - **HTML5** with modern CSS3
 - **Vanilla JavaScript** (No frameworks)
