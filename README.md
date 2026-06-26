@@ -10,6 +10,8 @@ HelpHub is a smart emergency support platform connecting blood donors, volunteer
 - **User Authentication**: Secure login and registration system
 ## 🛠️ Technology Stack
 
+
+
 ### Backend
 - **Framework**: Spring Boot 4.0.6
 - **Language**: Java 17
